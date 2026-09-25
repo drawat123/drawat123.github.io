@@ -24,7 +24,7 @@ Plain HTML, CSS and JavaScript. No framework, no build step and no dependencies 
 ## Project structure
 
 ```
-portfolio/
+drawat123.github.io/
 ├── index.html       # page skeleton
 ├── styles.css       # layout, themes, print styles
 ├── app.js           # renders content; diagrams, filter, timeline, theme
