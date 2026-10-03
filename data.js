@@ -54,7 +54,7 @@ window.RESUME = {
         {
           label: "Remote View: from anywhere",
           default: true,
-          note: "OCS360 replaces the controller's local web server, so WebMI works from anywhere with an internet connection. The WebMI app itself needed no changes: the same app runs locally and remotely.",
+          note: "OCS360 replaces the controller's local web server, so WebMI works from anywhere with an internet connection. The same WebMI pages work both locally and remotely.",
           nodes: [
             { id: "cscape", label: "Cscape", sub: "desktop", x: 90, y: 55 },
             { id: "browser", label: "Browser", sub: "anywhere", x: 90, y: 205 },
@@ -62,11 +62,10 @@ window.RESUME = {
             { id: "plc", label: "PLC", sub: "controller", x: 690, y: 130 },
           ],
           flow: [
-            { path: ["cscape", "cloud"], text: "Cscape publishes the same WebMI package to OCS360, which stores it in the cloud. Smart upload sends only the files that changed." },
-            { path: ["plc", "cloud"], text: "Or, if the controller already has the package, it can upload the package to OCS360 directly over MQTT." },
-            { path: ["browser", "cloud"], text: "The browser opens the Remote View address from anywhere, and OCS360 serves the WebMI app. A thin compatibility layer lets the existing app run in the cloud without any changes." },
-            { path: ["browser", "cloud", "plc"], text: "The app makes the same API calls it makes locally. OCS360 forwards them over MQTT to the controller's firmware." },
-            { path: ["plc", "cloud", "browser"], text: "The reply travels back over MQTT and OCS360 answers the browser, with no local web server involved." },
+            { path: ["cscape", "cloud"], text: "Cscape publishes the same WebMI pages to OCS360 instead of to the controller." },
+            { path: ["browser", "cloud"], text: "The browser opens the Remote View address from anywhere, and OCS360 serves the WebMI pages." },
+            { path: ["browser", "cloud", "plc"], text: "Requests from the browser go through OCS360 to the controller." },
+            { path: ["plc", "cloud", "browser"], text: "The controller's reply comes back the same way, with no local web server involved." },
           ],
         },
       ],
@@ -74,7 +73,7 @@ window.RESUME = {
     {
       id: "remote-connect",
       name: "Remote Connect",
-      tagline: "Program and debug PLCs from anywhere. Cscape's established, stable serial protocol now travels over MQTT through the cloud.",
+      tagline: "Program and debug PLCs from anywhere. Cscape connects to the controller through the cloud, with no static IP, VPN or firewall changes.",
       role: "Designed end-to-end · developed the Cscape and cloud sides · wrote the firmware spec",
       tags: ["C++", "MFC", "Java", "Spring Boot", "MQTT", "IoT", "Multithreading", "System Design"],
       modes: [
@@ -86,24 +85,24 @@ window.RESUME = {
             { id: "plc", label: "PLC", sub: "direct link", x: 690, y: 130 },
           ],
           flow: [
-            { path: ["cscape", "plc"], text: "Cscape sends serial-protocol packets to the controller over the direct link." },
-            { path: ["plc", "cscape"], text: "The controller replies with serial-protocol packets on the same link." },
+            { path: ["cscape", "plc"], text: "Cscape communicates with the controller over the direct link." },
+            { path: ["plc", "cscape"], text: "The controller replies on the same link." },
           ],
         },
         {
           label: "Remote Connect: from anywhere",
           default: true,
-          note: "The proven serial protocol is reused rather than replaced. Its packets are carried over MQTT, with a larger packet size and other optimisations for the round trip over the internet.",
+          note: "Cscape works the way engineers already know, but through the cloud, so the controller can be anywhere with an internet connection.",
           nodes: [
             { id: "cscape", label: "Cscape", sub: "desktop", x: 90, y: 130 },
-            { id: "cloud", label: "OCS360", sub: "MQTT relay", x: 390, y: 130 },
+            { id: "cloud", label: "OCS360", sub: "cloud", x: 390, y: 130 },
             { id: "plc", label: "PLC", sub: "controller", x: 690, y: 130 },
           ],
           flow: [
-            { path: ["cscape", "cloud"], text: "A new Remote Connect driver, alongside serial, USB and LAN, takes Cscape's usual serial-protocol packets and publishes them over MQTT." },
-            { path: ["cloud", "plc"], text: "OCS360 relays the packets to the controller over MQTT." },
-            { path: ["plc", "cloud", "cscape"], text: "Replies come back the same way, so programming, monitoring and debugging work unchanged, from anywhere." },
-            { path: ["cloud", "cscape"], text: "OCS360 alerts Cscape if the controller stops responding, and meters bandwidth per subscription plan." },
+            { path: ["cscape", "cloud"], text: "Cscape gets a new Remote Connect option alongside serial, USB and LAN, and sends its traffic through OCS360." },
+            { path: ["cloud", "plc"], text: "OCS360 passes it on to the controller." },
+            { path: ["plc", "cloud", "cscape"], text: "Replies come back the same way, so programming, monitoring and debugging work from anywhere." },
+            { path: ["cloud", "cscape"], text: "OCS360 alerts Cscape if the controller stops responding." },
           ],
         },
       ],
@@ -162,8 +161,8 @@ window.RESUME = {
           title: "Senior Software Engineer",
           dates: "Jul 2024 — Jun 2026",
           points: [
-            "Remote View: designed end-to-end and built the Cscape publishing flow and the cloud-side serving and data relay, so the existing WebMI app runs from anywhere with no changes to it.",
-            "Remote Connect: carried Cscape's established serial protocol over MQTT through the cloud via a new communication driver, with a larger packet size and other optimisations for internet round trips.",
+            "Remote View: designed end-to-end and built the Cscape and cloud sides, so existing WebMI pages work from anywhere.",
+            "Remote Connect: designed end-to-end and built the Cscape and cloud sides, so engineers can program and debug controllers from anywhere.",
             "Migrated OCS360's custom features onto a new platform version; added expiring share links and security hardening.",
             "Restructured Cscape's OCS360 configuration, integrated the billing app into Cscape, and sped up graphics downloads.",
           ],
